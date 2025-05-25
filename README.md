@@ -1,104 +1,99 @@
-# KitBox
+# KitBox - Equipment Management Application
 
-**KitBox** is a web-based equipment management tool designed for tabletop roleplaying games, with a focus on GURPS but adaptable to other systems. Organize your adventurer's gear with an intuitive interface, featuring a parchment-themed design, a paperdoll for character equipment placement, and support for containers like backpacks and belts. Whether you're tracking a sword's weight or stashing potions in a saddlebag, KitBox streamlines your inventory management.
+KitBox is a web application designed to help users manage equipment for tabletop roleplaying games. It features a master equipment list, a paperdoll interface to visualize equipped items, and management of items within containers like backpacks.
+
+This version is implemented with a Python Flask backend and an HTML/JavaScript frontend, adapted from an original concept for an Electron application.
 
 ## Features
 
-- **Comprehensive Gear Tracking**: Manage equipment with details like name, description, weight, cost, value, and legality.
-- **Interactive Paperdoll**: Assign gear to body slots (e.g., head, hands) or containers via a graphical character interface.
-- **Container Management**: Open backpacks, belts, or saddlebags to organize nested items.
-- **Parchment Aesthetic**: A thematic, parchment-style UI for an immersive RPG experience.
-- **Smooth Navigation**: Seamlessly switch between the master gear list, paperdoll, and container views with robust state management.
-- **Flexible Design**: Optimized for GURPS but adaptable to any tabletop RPG system.
+*   **Master Equipment List:** View, add, edit, and delete all available gear items. Includes details like name, description, weight, cost, value, legality, and current location.
+*   **Paperdoll Interface:** Visually represent character equipment on a paperdoll with designated slots (Head, Torso, Hands, etc.).
+*   **Container Management:** Manage items within containers (e.g., Backpack, Pouch). View contents, total weight, and total value for each container.
+*   **Parchment Theme:** A medieval parchment-style user interface.
 
-## Screenshots
+## Tech Stack
 
-*Coming soon! Check back for visuals of the paperdoll, gear list, and container views.*
+*   **Backend:** Python (Flask)
+*   **Database:** SQLite
+*   **Frontend:** HTML, Tailwind CSS, JavaScript
+*   **Data Validation:** Pydantic (for Flask API)
 
-## Getting Started
+## Project Structure
 
-### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
-- A modern web browser (Chrome, Firefox, Edge, etc.)
+*   `app.py`: The main Flask application file containing backend logic, API endpoints, and routes to serve HTML pages.
+*   `dynamic_master_list.html`: HTML page for the master equipment list.
+*   `dynamic_paperdoll.html`: HTML page for the paperdoll interface.
+*   `dynamic_containers.html`: HTML page for viewing container contents.
+*   `src/database/schema.sql`: SQL script to initialize the SQLite database schema and some default data.
+*   `kitbox.db`: The SQLite database file (will be created when the app is run/initialized).
+*   `.flaskenv`: Environment variables for Flask CLI (optional, but recommended).
 
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/kitbox.git
-   cd kitbox
+## Setup and Running the Application
 
-Install dependencies:
-bash
+1.  **Clone the Repository (if applicable):**
+    ```bash
+    # git clone <repository-url>
+    # cd <repository-directory>
+    ```
 
-npm install
+2.  **Create a Python Virtual Environment:**
+    It's highly recommended to use a virtual environment.
+    ```bash
+    python -m venv venv
+    ```
+    Activate the virtual environment:
+    *   On Windows:
+        ```bash
+        .\venv\Scripts\activate
+        ```
+    *   On macOS/Linux:
+        ```bash
+        source venv/bin/activate
+        ```
 
-Start the development server:
-bash
+3.  **Install Dependencies:**
+    You will need Flask and Pydantic. You can install them using pip:
+    ```bash
+    pip install Flask Pydantic
+    ```
+    (Ideally, this project would have a `requirements.txt` file. You can create one after installing dependencies with `pip freeze > requirements.txt`)
 
-npm start
+4.  **Initialize the Database:**
+    The application uses SQLite. The database schema and initial data are defined in `src/database/schema.sql`. To initialize (or re-initialize) the database, run the following Flask CLI command from the project root:
+    ```bash
+    flask init-db
+    ```
+    This will create a `kitbox.db` file in your project root if it doesn't exist, or recreate it if it does.
 
-Open your browser to http://localhost:3000 to view KitBox.
+5.  **Run the Flask Application:**
+    Once the database is initialized, you can run the Flask development server:
+    ```bash
+    flask run
+    ```
+    By default, this usually starts the server at `http://127.0.0.1:5000/`. Open this URL in your web browser.
 
-Configuration
-API Setup: (If applicable) Configure backend APIs in config.js.
+    *   The main equipment list is at `/`
+    *   The paperdoll view is at `/paperdoll`
+    *   The container view is at `/containers?location_id=<ID>` (e.g., `/containers?location_id=18` to see the contents of the default "Backpack"). You can find location IDs by inspecting the `/api/locations` endpoint or by looking at the `location_id` of container items in the master list.
 
-Stitch-AI: Ensure Google’s Stitch-AI GUI engine is properly integrated (refer to Stitch-AI Docs).
+## API Endpoints (Brief Overview)
 
-Customization: Adjust the parchment theme or paperdoll slots in src/styles or src/components.
+The application provides several API endpoints for managing data:
 
-Usage
-Add Gear: Use the master list to input equipment details (e.g., "Steel Helmet", 2 lbs, $50).
+*   **Gear:**
+    *   `GET /api/gear`: List all gear items.
+    *   `POST /api/gear`: Create a new gear item.
+    *   `GET /api/gear/<id>`: Get a specific gear item.
+    *   `PUT /api/gear/<id>`: Update a specific gear item.
+    *   `DELETE /api/gear/<id>`: Delete a specific gear item.
+*   **Locations:**
+    *   `GET /api/locations`: List all locations (body slots, containers).
+    *   `GET /api/locations/<id>`: Get a specific location.
+    *   `GET /api/locations/<id>/items`: List all items within a specific location (container).
 
-Assign to Paperdoll: Link gear to body slots or containers via the paperdoll tab.
+These endpoints return JSON data and are used by the JavaScript in the HTML pages to provide dynamic functionality.
 
-Manage Containers: Click a backpack or belt to view and organize its contents.
-
-Edit or Delete: Update gear details or remove items as needed.
-
-Contributing
-We welcome contributions to make KitBox even better! To contribute:
-Fork the repository.
-
-Create a feature branch:
-bash
-
-git checkout -b feature/awesome-feature
-
-Commit your changes:
-bash
-
-git commit -m 'Add awesome feature'
-
-Push to the branch:
-bash
-
-git push origin feature/awesome-feature
-
-Open a Pull Request.
-
-Please read our Contributing Guidelines (CONTRIBUTING.md) and adhere to the Code of Conduct (CODE_OF_CONDUCT.md).
-Roadmap
-Add drag-and-drop support for gear assignment.
-
-Implement export/import for gear lists.
-
-Support for multiple characters per user.
-
-Mobile-responsive design.
-
-Integration with RPG system-specific rules (e.g., GURPS weight penalties).
-
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
-Acknowledgments
-Built with Stitch-AI for the GUI engine.
-
-Inspired by the tabletop RPG community, especially GURPS players.
-
-Thanks to all contributors and testers!
-
-Contact
-Have questions or ideas? Open an issue or reach out at your-email@example.com (mailto:your-email@example.com).
-Happy adventuring with KitBox! 
-
+## Development Notes
+*   The HTML pages use Tailwind CSS for styling and include custom styles for the parchment theme.
+*   JavaScript is embedded in the HTML files to handle API interactions and DOM manipulation.
+*   The application is designed to be run locally.

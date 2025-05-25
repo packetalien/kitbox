@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8"/>
+        <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+        <link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=MedievalSharp%3Awght%40400&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+        <title>Gear Manager - Equipment List (Dynamic)</title>
+        <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <style>
+          .parchment-bg {
+            background-image: url("https://www.transparenttextures.com/patterns/old-paper.png"),
+              linear-gradient(to bottom right, #fdf5e6, #f5e9d3);
+            background-color: #fdf5e6;}
+          .parchment-border {
+            border-image-source: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.path%7Bstroke:%238B4513;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round;%7D%3C/style%3E%3Cpath class='path' d='M5 5 Q 50 0 95 5 Q 100 50 95 95 Q 50 100 5 95 Q 0 50 5 5 Z'/%3E%3C/svg%3E");
+            border-image-slice: 15;
+            border-image-width: 15px;
+            border-image-outset: 0;
+            border-image-repeat: round;
+            border-style: solid;
+            border-width: 10px;}
+          .text-sepia { color: #5a3d2b; }
+          .hover-sepia:hover { color: #8c6a4e; }
+          .bg-sepia-light { background-color: #f5e9d3; }
+          .bg-sepia-dark { background-color: #c8a679; }
+          .border-sepia { border-color: #a07e5a; }
+          .font-title { font-family: "MedievalSharp", cursive; }
+          .font-body { font-family: Inter, "Noto Sans", sans-serif; }
+          .btn-primary {
+            background-color: #8B4513;color: #fdf5e6;
+            border: 2px solid #654321;box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+          }
+          .btn-primary:hover { background-color: #A0522D;}
+          .btn-secondary {
+            background-color: #deb887;color: #5a3d2b;
+            border: 2px solid #a07e5a;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+          }
+          .btn-secondary:hover { background-color: #cd853f;}
+          .table th, .table td { border-color: #a07e5a; }
+          .table thead th { background-color: #d2b48c;}
+        </style>
+    </head>
+    <body class="parchment-bg font-body text-sepia">
+    <div class="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden">
+    <div class="layout-container flex h-full grow flex-col">
+    <header class="flex items-center justify-between whitespace-nowrap border-b-4 border-sepia px-10 py-4 shadow-lg bg-sepia-light">
+        <div class="flex items-center gap-4">
+            <div class="size-10 text-[#654321]">
+                <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z" fill="currentColor" fill-rule="evenodd"></path></svg>
+            </div>
+            <h1 class="font-title text-3xl text-[#654321] tracking-wider">Gear Master</h1>
+        </div>
+        <nav class="flex flex-1 justify-end gap-6">
+            <div class="flex items-center gap-6">
+                <a class="text-sepia text-base font-medium leading-normal hover-sepia font-body" href="#">Characters</a>
+                <a class="text-sepia text-base font-bold leading-normal hover-sepia font-body underline decoration-2 underline-offset-4 decoration-[#8B4513]" href="#">Equipment</a>
+                <a class="text-sepia text-base font-medium leading-normal hover-sepia font-body" href="#">Encounters</a>
+                <a class="text-sepia text-base font-medium leading-normal hover-sepia font-body" href="#">Campaigns</a>
+            </div>
+            <button class="flex items-center justify-center rounded-full h-10 w-10 btn-secondary transition-colors duration-150">
+                <span class="material-icons text-[#654321]">settings</span>
+            </button>
+            <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-sepia shadow-md" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDjKNPwDHHSwWEGJCFMp6czZtL0-1tDc9uCBzlfOXgiEyr2u-vzW1C-P4m9bfmnFhrF9e4ThmVVpf9o3nxCWrmrZrxZKSdPGuy60-8E8XYyttalgNW8O3pT5pJByfZzaEik_zmWsx1DL5j3Vmmdk6LOTXdXTDgpy6D1PilrP6XjjxuHu7qy2HzD0do5HJxNA8JCkVOT5VJEVvLyZ7KxOyM_b-rxmg8WYGyKm2KD-If6OvKjAeBLPg6xltxCVY8XYu7gj3V14vSPOWo");'></div>
+        </nav>
+    </header>
+    <main class="px-10 md:px-20 lg:px-40 flex flex-1 justify-center py-8">
+        <div class="layout-content-container flex flex-col max-w-5xl flex-1 parchment-border bg-sepia-light p-6 shadow-xl">
+            <div class="flex flex-wrap justify-between items-center gap-4 mb-6 p-4 border-b-2 border-sepia">
+                <h2 class="text-sepia tracking-wide text-4xl font-title min-w-72">Equipment Master List</h2>
+                <button id="openAddItemModal" class="btn-primary flex items-center gap-2 min-w-[84px] max-w-[480px] cursor-pointer justify-center overflow-hidden rounded-lg h-10 px-6 text-sm font-bold leading-normal transition-colors duration-150">
+                    <span class="material-icons text-lg">add_circle_outline</span>
+                    <span class="truncate font-body">Add New Item</span>
+                </button>
+            </div>
+            <div class="px-2 py-3 @container">
+                <div class="overflow-x-auto rounded-lg border-2 border-sepia shadow-md">
+                    <table class="w-full min-w-[900px] flex-1 table">
+                        <thead class="font-title text-lg">
+                            <tr class="bg-sepia-dark text-[#fdf5e6]">
+                                <th class="px-4 py-3 text-left w-[15%]">Name</th>
+                                <th class="px-4 py-3 text-left w-[25%]">Description</th>
+                                <th class="px-4 py-3 text-left w-[10%] text-center">Weight</th>
+                                <th class="px-4 py-3 text-left w-[10%] text-center">Cost</th>
+                                <th class="px-4 py-3 text-left w-[10%] text-center">Value</th>
+                                <th class="px-4 py-3 text-left w-[10%] text-center">Legality</th>
+                                <th class="px-4 py-3 text-left w-[20%]">Location</th>
+                                <th class="px-4 py-3 text-left w-[10%] text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-body text-sm">
+                            <!-- Rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <style> /* Responsive table styles from original file */
+                    @container (max-width: 1024px) { .table th:nth-child(2), .table td:nth-child(2) { display: none; } }
+                    @container (max-width: 768px) { .table th:nth-child(3), .table td:nth-child(3), .table th:nth-child(4), .table td:nth-child(4), .table th:nth-child(5), .table td:nth-child(5) { display: none; } }
+                    @container (max-width: 640px) { .table th:nth-child(7), .table td:nth-child(7) { display: none; } .table th:nth-child(1), .table td:nth-child(1) { width: 60%; } .table th:nth-child(6), .table td:nth-child(6) { width: 20%; } }
+                </style>
+            </div>
+
+            <!-- Add/Edit Item Modal -->
+            <div id="itemModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 p-4" style="font-family: Inter, 'Noto Sans', sans-serif;">
+                <div class="parchment-bg parchment-border text-sepia max-w-2xl w-full rounded-lg border-2 border-sepia bg-sepia-light p-6 shadow-xl">
+                    <h3 id="modalTitle" class="font-title text-2xl mb-4">Add New Item</h3>
+                    <form id="itemForm">
+                        <input type="hidden" id="itemId" name="id">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="itemName" class="block text-sm font-medium mb-1">Name*</label>
+                                <input type="text" id="itemName" name="name" required class="w-full rounded-md border-sepia shadow-sm focus:border-[#654321] focus:ring-[#654321] bg-white p-2 text-gray-700">
+                            </div>
+                            <div>
+                                <label for="itemWeight" class="block text-sm font-medium mb-1">Weight (lbs)*</label>
+                                <input type="number" id="itemWeight" name="weight" step="0.1" required class="w-full rounded-md border-sepia shadow-sm focus:border-[#654321] focus:ring-[#654321] bg-white p-2 text-gray-700">
+                            </div>
+                            <div>
+                                <label for="itemCost" class="block text-sm font-medium mb-1">Cost</label>
+                                <input type="number" id="itemCost" name="cost" step="0.01" class="w-full rounded-md border-sepia shadow-sm focus:border-[#654321] focus:ring-[#654321] bg-white p-2 text-gray-700">
+                            </div>
+                            <div>
+                                <label for="itemValue" class="block text-sm font-medium mb-1">Value</label>
+                                <input type="number" id="itemValue" name="value" step="0.01" class="w-full rounded-md border-sepia shadow-sm focus:border-[#654321] focus:ring-[#654321] bg-white p-2 text-gray-700">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="itemDescription" class="block text-sm font-medium mb-1">Description</label>
+                                <textarea id="itemDescription" name="description" rows="3" class="w-full rounded-md border-sepia shadow-sm focus:border-[#654321] focus:ring-[#654321] bg-white p-2 text-gray-700"></textarea>
+                            </div>
+                            <div>
+                                <label for="itemLegality" class="block text-sm font-medium mb-1">Legality</label>
+                                <input type="text" id="itemLegality" name="legality" class="w-full rounded-md border-sepia shadow-sm focus:border-[#654321] focus:ring-[#654321] bg-white p-2 text-gray-700">
+                            </div>
+                            <div>
+                                <label for="itemLocation" class="block text-sm font-medium mb-1">Location</label>
+                                <select id="itemLocation" name="location_id" class="w-full rounded-md border-sepia shadow-sm focus:border-[#654321] focus:ring-[#654321] bg-white p-2 text-gray-700">
+                                    <option value="">None</option>
+                                    <!-- Locations will be populated here by JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-3">
+                            <button type="button" id="cancelModalButton" class="btn-secondary font-body px-4 py-2 rounded-lg transition-colors duration-150">Cancel</button>
+                            <button type="submit" class="btn-primary font-body px-4 py-2 rounded-lg transition-colors duration-150">Save Item</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="text-center py-4 mt-auto bg-sepia-light border-t-2 border-sepia">
+        <p class="text-xs text-sepia font-body">© 2024 Gear Master. All rights reserved by the adventurers.</p>
+    </footer>
+    </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const itemTableBody = document.querySelector('table.table tbody');
+            const openAddItemModalButton = document.getElementById('openAddItemModal'); // Corrected ID
+            const itemModal = document.getElementById('itemModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const itemForm = document.getElementById('itemForm');
+            const cancelModalButton = document.getElementById('cancelModalButton');
+            const locationSelect = document.getElementById('itemLocation');
+            let editingItemId = null;
+
+            async function loadLocations() {
+                try {
+                    const response = await fetch('/api/locations');
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    const locations = await response.json();
+                    
+                    locationSelect.innerHTML = '<option value="">None</option>'; 
+                    locations.forEach(loc => {
+                        const option = document.createElement('option');
+                        option.value = loc.id;
+                        option.textContent = `${loc.name} (${loc.type})`;
+                        locationSelect.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error('Error loading locations:', error);
+                }
+            }
+
+            async function fetchAndDisplayGear() {
+                try {
+                    const response = await fetch('/api/gear');
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    const gearItems = await response.json();
+                    
+                    itemTableBody.innerHTML = ''; 
+
+                    gearItems.forEach(item => {
+                        const row = itemTableBody.insertRow();
+                        row.className = 'border-t border-sepia bg-opacity-50 hover:bg-sepia-dark hover:bg-opacity-20 transition-colors duration-100';
+                        
+                        row.insertCell().textContent = item.name || 'N/A';
+                        row.insertCell().textContent = item.description || 'N/A';
+                        
+                        const weightCell = row.insertCell();
+                        weightCell.textContent = item.weight !== null ? `${item.weight} lbs` : 'N/A';
+                        weightCell.classList.add('text-center');
+                        
+                        const costCell = row.insertCell();
+                        costCell.textContent = item.cost !== null ? `${item.cost} gp` : 'N/A';
+                        costCell.classList.add('text-center');
+                        
+                        const valueCell = row.insertCell();
+                        valueCell.textContent = item.value !== null ? `${item.value} gp` : 'N/A';
+                        valueCell.classList.add('text-center');
+                        
+                        const legalityCell = row.insertCell();
+                        legalityCell.classList.add('text-center');
+                        if (item.legality) {
+                            const legalitySpan = document.createElement('span');
+                            legalitySpan.textContent = item.legality;
+                            legalitySpan.className = `inline-block px-3 py-1 text-xs font-semibold rounded-full border ${
+                                item.legality.toLowerCase() === 'legal' ? 'bg-green-200 text-green-800 border-green-400' : 
+                                item.legality.toLowerCase() === 'restricted' ? 'bg-yellow-200 text-yellow-800 border-yellow-400' :
+                                'bg-gray-200 text-gray-800 border-gray-400'
+                            }`;
+                            legalityCell.appendChild(legalitySpan);
+                        } else {
+                            legalityCell.textContent = 'N/A';
+                        }
+
+                        row.insertCell().textContent = item.location ? `${item.location.name}` : 'None';
+                        
+                        const actionsCell = row.insertCell();
+                        actionsCell.classList.add('text-center');
+                        const editButton = document.createElement('button');
+                        editButton.className = 'p-1 text-sepia hover-sepia transition-colors duration-150 edit-btn';
+                        editButton.innerHTML = '<span class="material-icons text-lg">edit</span>';
+                        editButton.dataset.itemId = item.id;
+                        
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'p-1 text-red-700 hover:text-red-900 transition-colors duration-150 delete-btn';
+                        deleteButton.innerHTML = '<span class="material-icons text-lg">delete</span>';
+                        deleteButton.dataset.itemId = item.id;
+                        
+                        actionsCell.appendChild(editButton);
+                        actionsCell.appendChild(deleteButton);
+                    });
+                } catch (error) {
+                    console.error('Failed to fetch gear:', error);
+                    itemTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4">Failed to load gear. Check console.</td></tr>';
+                }
+            }
+
+            function showModal(isEdit = false, item = null) {
+                editingItemId = isEdit && item ? item.id : null;
+                modalTitle.textContent = isEdit ? 'Edit Item' : 'Add New Item';
+                itemForm.reset(); 
+                document.getElementById('itemId').value = ''; 
+
+                if (isEdit && item) {
+                    document.getElementById('itemId').value = item.id;
+                    document.getElementById('itemName').value = item.name || '';
+                    document.getElementById('itemDescription').value = item.description || '';
+                    document.getElementById('itemWeight').value = item.weight !== null ? item.weight : '';
+                    document.getElementById('itemCost').value = item.cost !== null ? item.cost : '';
+                    document.getElementById('itemValue').value = item.value !== null ? item.value : '';
+                    document.getElementById('itemLegality').value = item.legality || '';
+                    locationSelect.value = item.location_id || '';
+                }
+                itemModal.classList.remove('hidden');
+                itemModal.classList.add('flex');
+                loadLocations(); 
+            }
+
+            function hideModal() {
+                itemModal.classList.add('hidden');
+                itemModal.classList.remove('flex');
+                editingItemId = null;
+            }
+
+            if (openAddItemModalButton) {
+                openAddItemModalButton.addEventListener('click', () => showModal(false));
+            }
+            if (cancelModalButton) {
+                cancelModalButton.addEventListener('click', hideModal);
+            }
+
+            itemForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const formData = new FormData(itemForm);
+                const data = Object.fromEntries(formData.entries());
+
+                data.weight = parseFloat(data.weight);
+                data.cost = data.cost ? parseFloat(data.cost) : null;
+                data.value = data.value ? parseFloat(data.value) : null;
+                data.location_id = data.location_id ? parseInt(data.location_id) : null;
+                
+                // Clean up optional fields that are empty strings
+                for (const key of ['description', 'legality', 'cost', 'value', 'location_id']) {
+                    if (data[key] === '' || (key === 'location_id' && data[key] === null) ) {
+                        if (key === 'location_id') data[key] = null; // Ensure location_id is null not ""
+                        else if (key === 'cost' || key === 'value') data[key] = null; // Ensure cost/value are null
+                        // For description and legality, empty string is acceptable, so no 'delete data[key]'
+                    }
+                }
+                if (data.name === "") delete data.name; // Should be caught by "required" but defensive
+                if (isNaN(data.weight)) delete data.weight; // Same for weight
+
+                const url = editingItemId ? `/api/gear/${editingItemId}` : '/api/gear';
+                const method = editingItemId ? 'PUT' : 'POST';
+
+                try {
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ error: "Failed to parse error JSON." }));
+                        console.error('API Error Data:', errorData);
+                        alert(`Error saving item: ${JSON.stringify(errorData.detail || errorData.error || 'Unknown API error')}`);
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    hideModal();
+                    fetchAndDisplayGear(); 
+                } catch (error) {
+                    console.error('Error submitting form:', error);
+                }
+            });
+            
+            itemTableBody.addEventListener('click', async function(event) {
+                const target = event.target.closest('button');
+                if (!target) return;
+
+                const itemId = target.dataset.itemId;
+                if (!itemId) return;
+
+                if (target.classList.contains('edit-btn')) {
+                    try {
+                        const response = await fetch(`/api/gear/${itemId}`);
+                        if (!response.ok) throw new Error('Failed to fetch item details for editing.');
+                        const item = await response.json();
+                        showModal(true, item);
+                    } catch (error) {
+                        console.error('Error fetching item for edit:', error);
+                        alert('Could not load item details for editing.');
+                    }
+                } else if (target.classList.contains('delete-btn')) {
+                    if (confirm(`Are you sure you want to delete item ID ${itemId}?`)) {
+                        try {
+                            const response = await fetch(`/api/gear/${itemId}`, { method: 'DELETE' });
+                            if (!response.ok) {
+                                const errorData = await response.json().catch(() => ({error: 'Failed to parse error response'}));
+                                alert(`Error deleting item: ${errorData.error || 'Unknown error'}`);
+                                throw new Error('Failed to delete item.');
+                            }
+                            fetchAndDisplayGear(); 
+                        } catch (error) {
+                            console.error('Error deleting item:', error);
+                        }
+                    }
+                }
+            });
+
+            fetchAndDisplayGear(); // Initial load
+        });
+    </script>
+    </body>
+    </html>

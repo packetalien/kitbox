@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+        <link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=MedievalSharp%3Awght%40400" onload="this.rel='stylesheet'" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+        <title>Gear Manager - Container Contents (Dynamic)</title>
+        <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <style>
+          .parchment-bg { background-image: url("https://www.transparenttextures.com/patterns/old-parchment.png"); background-color: #fdf5e6;}
+          .medieval-font { font-family: "MedievalSharp", cursive; }
+          .text-sepia { color: #704214;}
+          .border-sepia { border-color: #8b4513;}
+          .button-sepia { background-color: #a0522d;color: #fdf5e6; }
+          .button-sepia:hover { background-color: #8b4513; }
+          .button-outline-sepia { border-color: #a0522d; color: #704214; }
+          .button-outline-sepia:hover { background-color: #f0e6d2; }
+          .table-header-sepia { background-color: #d2b48c;color: #5d4037;}
+          .table-row-sepia:nth-child(odd) { background-color: #f5f5dc;}
+          .table-row-sepia:nth-child(even) { background-color: #faf0e6;}
+          .icon-sepia { color: #704214; }
+        </style>
+    </head>
+    <body class="parchment-bg text-sepia" style='font-family: "Inter", "Noto Sans", sans-serif;'>
+    <div class="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden">
+    <div class="layout-container flex h-full grow flex-col">
+        <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-sepia px-10 py-4 shadow-md">
+            <div class="flex items-center gap-4">
+                <div class="size-8 text-sepia"><span class="material-icons" style="font-size: 32px;">shield</span></div>
+                <h1 class="text-sepia medieval-font text-3xl font-bold">Gear Manager</h1>
+            </div>
+            <nav class="flex flex-1 justify-center gap-8">
+                <a class="text-sepia hover:text-[#5d4037] medieval-font text-lg font-medium" href="#">Characters</a>
+                <a class="text-sepia hover:text-[#5d4037] medieval-font text-lg font-medium" href="/paperdoll">Paperdoll</a>
+                <a class="text-sepia hover:text-[#5d4037] medieval-font text-lg font-medium" href="/">Equipment List</a>
+                <a class="text-sepia hover:text-[#5d4037] medieval-font text-lg font-medium" href="#">Rules</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <button class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 button-outline-sepia gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-3 border-2"><span class="material-icons icon-sepia">notifications</span></button>
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-sepia" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDYQjdrTpNUoB321hk7vil9D2-4-fEiEOVaEUmF0U60H9qBsd5ln0nHipj704gWvJCslUzzkWc3yQS7glhJqH0aCgSoDgVX4loUfABY3By8Do3OTIndGZYIgfPpDps9YR0W3aiHQ_B9_fHXLRpHw418LnB8lQ1hddByw82TP7DgjI6E1C9_TnRb7WtRmGKFAaLYusjSzDNeTkclZVf1iv96OTfppIAXka9WpQXnrjnSfj8spFjdZOWa77gh3Y4w06w7Zcgha6AJREQ");'></div>
+            </div>
+        </header>
+        <main class="px-10 md:px-20 lg:px-40 flex flex-1 justify-center py-8">
+            <div class="layout-content-container flex flex-col max-w-4xl w-full flex-1 bg-[#fdf0d5] p-6 rounded-lg border-2 border-sepia shadow-xl">
+                <div class="flex flex-wrap justify-between items-center gap-4 p-4 border-b border-sepia mb-6">
+                    <h2 id="containerNameTitle" class="text-sepia medieval-font text-4xl font-bold">Container Contents</h2>
+                    <div class="flex gap-3">
+                        <a id="addItemToContainerLink" href="/" class="button-sepia medieval-font text-md font-semibold px-4 py-2 rounded-md hover:shadow-lg transition-shadow flex items-center gap-2">
+                            <span class="material-icons">add_circle_outline</span> Add Item to System
+                        </a>
+                        <!-- Organize button functionality can be a future enhancement -->
+                        <button class="button-outline-sepia medieval-font text-md font-semibold px-4 py-2 rounded-md border-2 hover:shadow-lg transition-shadow flex items-center gap-2">
+                            <span class="material-icons">tune</span> Organize
+                        </button>
+                    </div>
+                </div>
+                <div class="px-4 py-3 @container">
+                    <div class="flex overflow-x-auto rounded-lg border-2 border-sepia shadow-md">
+                        <table class="min-w-full w-full">
+                            <thead class="table-header-sepia">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-sm font-semibold medieval-font tracking-wider">Item</th>
+                                    <!-- Quantity might not be directly on gear object, might need adjustment or removal if not used -->
+                                    <!-- <th class="px-6 py-3 text-left text-sm font-semibold medieval-font tracking-wider">Quantity</th> -->
+                                    <th class="px-6 py-3 text-left text-sm font-semibold medieval-font tracking-wider">Weight</th>
+                                    <th class="px-6 py-3 text-left text-sm font-semibold medieval-font tracking-wider">Value</th>
+                                    <th class="px-6 py-3 text-left text-sm font-semibold medieval-font tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="containerItemsTableBody" class="divide-y divide-sepia">
+                                <!-- Items will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="mt-6 p-4 border-t border-sepia flex justify-between items-center">
+                    <div>
+                        <p class="text-sm text-sepia"><strong class="medieval-font">Total Weight:</strong> <span id="totalWeight">0 lbs</span></p>
+                        <p class="text-sm text-sepia"><strong class="medieval-font">Total Value:</strong> <span id="totalValue">0 gp</span></p>
+                    </div>
+                    <a href="/dynamic_paperdoll.html" class="button-outline-sepia medieval-font text-md font-semibold px-4 py-2 rounded-md border-2 hover:shadow-lg transition-shadow flex items-center gap-2">
+                        <span class="material-icons">arrow_back</span> Back to Character
+                    </a>
+                </div>
+            </div>
+        </main>
+        <footer class="text-center py-4 border-t border-sepia text-xs text-sepia medieval-font">
+            <p>© 2023 Gear Manager. All rights reserved by the Adventurers' Guild.</p>
+        </footer>
+    </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        const containerNameTitle = document.getElementById('containerNameTitle');
+        const itemsTableBody = document.getElementById('containerItemsTableBody');
+        const totalWeightEl = document.getElementById('totalWeight');
+        const totalValueEl = document.getElementById('totalValue');
+        const addItemLink = document.getElementById('addItemToContainerLink');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const locationId = urlParams.get('location_id');
+
+        if (!locationId) {
+            containerNameTitle.textContent = 'Error: No Container Specified';
+            itemsTableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4">No location ID provided in the URL.</td></tr>';
+            return;
+        }
+
+        // Update "Add Item" link to pass current container's location_id
+        addItemLink.href = `/dynamic_master_list.html?default_location_id=${locationId}`;
+
+
+        async function fetchContainerDetailsAndItems() {
+            try {
+                // Fetch container details (for its name)
+                const locResponse = await fetch(`/api/locations/${locationId}`);
+                if (!locResponse.ok) {
+                    throw new Error(`HTTP error! Status: ${locResponse.status} while fetching location details.`);
+                }
+                const locationData = await locResponse.json();
+                containerNameTitle.textContent = `${locationData.name} Contents`;
+
+                // Fetch items in the container
+                const itemsResponse = await fetch(`/api/locations/${locationId}/items`);
+                if (!itemsResponse.ok) {
+                    throw new Error(`HTTP error! Status: ${itemsResponse.status} while fetching items.`);
+                }
+                const items = await itemsResponse.json();
+
+                itemsTableBody.innerHTML = ''; // Clear placeholder
+                let currentTotalWeight = 0;
+                let currentTotalValue = 0;
+
+                if (items.length === 0) {
+                    itemsTableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4">This container is empty.</td></tr>';
+                } else {
+                    items.forEach(item => {
+                        const row = itemsTableBody.insertRow();
+                        row.className = 'table-row-sepia';
+                        
+                        row.insertCell().textContent = item.name || 'N/A';
+                        // Quantity: Assuming 1 for now, as not explicitly in Gear model for this view
+                        // const quantityCell = row.insertCell();
+                        // quantityCell.textContent = '1'; // Placeholder
+
+                        const weightCell = row.insertCell();
+                        weightCell.textContent = item.weight !== null ? `${item.weight} lbs` : 'N/A';
+                        
+                        const valueCell = row.insertCell();
+                        valueCell.textContent = item.value !== null ? `${item.value} gp` : 'N/A'; // Assuming gp for simplicity
+
+                        const actionsCell = row.insertCell();
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'text-red-600 hover:text-red-800 transition-colors delete-item-btn';
+                        deleteButton.innerHTML = '<span class="material-icons text-base align-middle">delete</span>';
+                        deleteButton.dataset.itemId = item.id;
+                        actionsCell.appendChild(deleteButton);
+
+                        if (item.weight !== null) currentTotalWeight += parseFloat(item.weight);
+                        if (item.value !== null) currentTotalValue += parseFloat(item.value);
+                    });
+                }
+                totalWeightEl.textContent = `${currentTotalWeight.toFixed(1)} lbs`;
+                totalValueEl.textContent = `${currentTotalValue.toFixed(2)} gp`;
+
+            } catch (error) {
+                console.error('Failed to fetch container details or items:', error);
+                containerNameTitle.textContent = 'Error Loading Container';
+                itemsTableBody.innerHTML = `<tr><td colspan="4" class="text-center py-4">Error loading items: ${error.message}</td></tr>`;
+            }
+        }
+        
+        itemsTableBody.addEventListener('click', async function(event) {
+            const target = event.target.closest('button.delete-item-btn');
+            if (!target) return;
+
+            const itemId = target.dataset.itemId;
+            if (!itemId) return;
+
+            if (confirm(`Are you sure you want to remove item ID ${itemId} from this container? This will set its location to 'None'.`)) {
+                try {
+                    // To "remove" from container, we update the item's location_id to null (or a generic unassigned location)
+                    // This reuses the PUT /api/gear/:id endpoint.
+                    const response = await fetch(`/api/gear/${itemId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ location_id: null }) // Set location to None
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({error: 'Failed to parse error response'}));
+                        alert(`Error removing item: ${errorData.detail || errorData.error || 'Unknown API error'}`);
+                        throw new Error('Failed to remove item from container.');
+                    }
+                    fetchContainerDetailsAndItems(); // Refresh list
+                } catch (error) {
+                    console.error('Error removing item:', error);
+                }
+            }
+        });
+
+        fetchContainerDetailsAndItems();
+    });
+    </script>
+    </body>
+    </html>
