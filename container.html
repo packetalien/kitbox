@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=MedievalSharp%3Awght%40400" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<title>Gear Manager - Container Contents</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+      .parchment-bg {
+        background-image: url("https://www.transparenttextures.com/patterns/old-parchment.png");
+        background-color: #fdf5e6;}
+      .medieval-font {
+        font-family: "MedievalSharp", cursive;
+      }
+      .text-sepia {
+        color: #704214;}
+      .border-sepia {
+        border-color: #8b4513;}
+      .button-sepia {
+        background-color: #a0522d;color: #fdf5e6;
+      }
+      .button-sepia:hover {
+        background-color: #8b4513;
+      }
+      .button-outline-sepia {
+        border-color: #a0522d;
+        color: #704214;
+      }
+      .button-outline-sepia:hover {
+        background-color: #f0e6d2;
+      }
+      .table-header-sepia {
+        background-color: #d2b48c;color: #5d4037;}
+      .table-row-sepia:nth-child(odd) {
+        background-color: #f5f5dc;}
+      .table-row-sepia:nth-child(even) {
+        background-color: #faf0e6;}
+      .icon-sepia {
+        color: #704214;
+      }
+    </style>
+</head>
+<body class="parchment-bg text-sepia" style='font-family: "Inter", "Noto Sans", sans-serif;'>
+<div class="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-sepia px-10 py-4 shadow-md">
+<div class="flex items-center gap-4">
+<div class="size-8 text-sepia">
+<span class="material-icons" style="font-size: 32px;">shield</span>
+</div>
+<h1 class="text-sepia medieval-font text-3xl font-bold">Gear Manager</h1>
+</div>
+<nav class="flex flex-1 justify-center gap-8">
+<a class="text-sepia hover:text-[#5d4037] medieval-font text-lg font-medium" href="#">Characters</a>
+<a class="text-sepia hover:text-[#5d4037] medieval-font text-lg font-medium" href="#">Campaigns</a>
+<a class="text-sepia hover:text-[#5d4037] medieval-font text-lg font-medium" href="#">Equipment</a>
+<a class="text-sepia hover:text-[#5d4037] medieval-font text-lg font-medium" href="#">Rules</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 button-outline-sepia gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-3 border-2">
+<span class="material-icons icon-sepia">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-sepia" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDYQjdrTpNUoB321hk7vil9D2-4-fEiEOVaEUmF0U60H9qBsd5ln0nHipj704gWvJCslUzzkWc3yQS7glhJqH0aCgSoDgVX4loUfABY3By8Do3OTIndGZYIgfPpDps9YR0W3aiHQ_B9_fHXLRpHw418LnB8lQ1hddByw82TP7DgjI6E1C9_TnRb7WtRmGKFAaLYusjSzDNeTkclZVf1iv96OTfppIAXka9WpQXnrjnSfj8spFjdZOWa77gh3Y4w06w7Zcgha6AJREQ");'></div>
+</div>
+</header>
+<main class="px-10 md:px-20 lg:px-40 flex flex-1 justify-center py-8">
+<div class="layout-content-container flex flex-col max-w-4xl w-full flex-1 bg-[#fdf0d5] p-6 rounded-lg border-2 border-sepia shadow-xl">
+<div class="flex flex-wrap justify-between items-center gap-4 p-4 border-b border-sepia mb-6">
+<h2 class="text-sepia medieval-font text-4xl font-bold">Backpack Contents</h2>
+<div class="flex gap-3">
+<button class="button-sepia medieval-font text-md font-semibold px-4 py-2 rounded-md hover:shadow-lg transition-shadow flex items-center gap-2">
+<span class="material-icons">add_circle_outline</span> Add Item
+                </button>
+<button class="button-outline-sepia medieval-font text-md font-semibold px-4 py-2 rounded-md border-2 hover:shadow-lg transition-shadow flex items-center gap-2">
+<span class="material-icons">tune</span> Organize
+                </button>
+</div>
+</div>
+<div class="px-4 py-3 @container">
+<div class="flex overflow-x-auto rounded-lg border-2 border-sepia shadow-md">
+<table class="min-w-full w-full">
+<thead class="table-header-sepia">
+<tr>
+<th class="px-6 py-3 text-left text-sm font-semibold medieval-font tracking-wider">Item</th>
+<th class="px-6 py-3 text-left text-sm font-semibold medieval-font tracking-wider">Quantity</th>
+<th class="px-6 py-3 text-left text-sm font-semibold medieval-font tracking-wider">Weight</th>
+<th class="px-6 py-3 text-left text-sm font-semibold medieval-font tracking-wider">Value</th>
+<th class="px-6 py-3 text-left text-sm font-semibold medieval-font tracking-wider">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-sepia">
+<tr class="table-row-sepia">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">Rations</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">10</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">2 lbs</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">5 gp</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<button class="text-red-600 hover:text-red-800 transition-colors">
+<span class="material-icons text-base align-middle">delete</span>
+</button>
+</td>
+</tr>
+<tr class="table-row-sepia">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">Waterskin</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">2</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">5 lbs</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">2 gp</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<button class="text-red-600 hover:text-red-800 transition-colors">
+<span class="material-icons text-base align-middle">delete</span>
+</button>
+</td>
+</tr>
+<tr class="table-row-sepia">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">Rope (50 ft)</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">1</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">10 lbs</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">1 gp</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<button class="text-red-600 hover:text-red-800 transition-colors">
+<span class="material-icons text-base align-middle">delete</span>
+</button>
+</td>
+</tr>
+<tr class="table-row-sepia">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">Torch</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">5</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">1 lb</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">1 sp</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<button class="text-red-600 hover:text-red-800 transition-colors">
+<span class="material-icons text-base align-middle">delete</span>
+</button>
+</td>
+</tr>
+<tr class="table-row-sepia">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">Flint and Steel</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">1</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">0.5 lbs</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">1 gp</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<button class="text-red-600 hover:text-red-800 transition-colors">
+<span class="material-icons text-base align-middle">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="mt-6 p-4 border-t border-sepia flex justify-between items-center">
+<div>
+<p class="text-sm text-sepia"><strong class="medieval-font">Total Weight:</strong> 28.5 lbs</p>
+<p class="text-sm text-sepia"><strong class="medieval-font">Total Value:</strong> 9 gp, 1 sp</p>
+</div>
+<button class="button-outline-sepia medieval-font text-md font-semibold px-4 py-2 rounded-md border-2 hover:shadow-lg transition-shadow flex items-center gap-2">
+<span class="material-icons">arrow_back</span> Back to Character
+                </button>
+</div>
+</div>
+</main>
+<footer class="text-center py-4 border-t border-sepia text-xs text-sepia medieval-font">
+<p>© 2023 Gear Manager. All rights reserved by the Adventurers' Guild.</p>
+</footer>
+</div>
+</div>
+
+</body></html>
