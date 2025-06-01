@@ -30,9 +30,11 @@ class GearBase(BaseModel):
     cost: Optional[float] = Field(None, ge=0, description="Cost in currency, e.g., 50.0")
     value: Optional[float] = Field(None, ge=0, description="Value in currency, e.g., 45.0")
     legality: Optional[str] = Field(None, description="E.g., 'Legal', 'Restricted'")
+    category: Optional[str] = None # Added category
     location_id: Optional[int] = Field(None, description="ID of the location where the item is stored")
 
 class GearCreate(GearBase):
+    category: Optional[str] = None # Explicitly adding, though GearBase has it. Ensures it can be set.
     pass
 
 class GearUpdate(BaseModel): 
@@ -42,6 +44,7 @@ class GearUpdate(BaseModel):
     cost: Optional[float] = Field(None, ge=0)
     value: Optional[float] = Field(None, ge=0)
     legality: Optional[str] = None
+    category: Optional[str] = None # Added category
     location_id: Optional[int] = None 
 
 class GearInDB(GearBase): 
@@ -149,6 +152,7 @@ def _make_gear_in_db_from_row(row_data):
         'cost': row_dict['cost'],
         'value': row_dict['value'],
         'legality': row_dict['legality'],
+        'category': row_dict.get('category'), # Added category
         'location_id': row_dict['location_id'], 
         'location': location_info 
     }
@@ -165,8 +169,8 @@ def create_gear_item_api():
     db = get_db()
     try:
         cursor = db.execute(
-            "INSERT INTO gear (name, description, weight, cost, value, legality, location_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (gear_data.name, gear_data.description, gear_data.weight, gear_data.cost, gear_data.value, gear_data.legality, gear_data.location_id)
+            "INSERT INTO gear (name, description, weight, cost, value, legality, category, location_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (gear_data.name, gear_data.description, gear_data.weight, gear_data.cost, gear_data.value, gear_data.legality, gear_data.category, gear_data.location_id)
         )
         db.commit()
         new_gear_id = cursor.lastrowid
@@ -186,7 +190,7 @@ def get_all_gear_api():
     db = get_db()
     query = """
         SELECT
-            g.id, g.name, g.description, g.weight, g.cost, g.value, g.legality, g.location_id,
+            g.id, g.name, g.description, g.weight, g.cost, g.value, g.legality, g.category, g.location_id,
             l.id as loc_id, l.name as loc_name, l.type as loc_type, l.parent_id as loc_parent_id
         FROM gear g
         LEFT JOIN locations l ON g.location_id = l.id
@@ -201,7 +205,7 @@ def get_gear_item_api(gear_id):
     db = get_db()
     query = """
         SELECT
-            g.id, g.name, g.description, g.weight, g.cost, g.value, g.legality, g.location_id,
+            g.id, g.name, g.description, g.weight, g.cost, g.value, g.legality, g.category, g.location_id,
             l.id as loc_id, l.name as loc_name, l.type as loc_type, l.parent_id as loc_parent_id
         FROM gear g
         LEFT JOIN locations l ON g.location_id = l.id
@@ -296,7 +300,7 @@ def get_items_in_location_api(location_id):
     
     query = """
         SELECT
-            g.id, g.name, g.description, g.weight, g.cost, g.value, g.legality, g.location_id,
+            g.id, g.name, g.description, g.weight, g.cost, g.value, g.legality, g.category, g.location_id,
             l.id as loc_id, l.name as loc_name, l.type as loc_type, l.parent_id as loc_parent_id
         FROM gear g
         LEFT JOIN locations l ON g.location_id = l.id 

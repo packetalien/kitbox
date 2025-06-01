@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS gear (
     cost REAL,
     value REAL,
     legality TEXT,
+    category TEXT, -- Added category column
     location_id INTEGER, -- Where the item is currently located
     FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE SET NULL -- If location is deleted, item becomes unassigned
 );
@@ -49,9 +50,17 @@ INSERT INTO locations (name, type) VALUES ('Saddlebags', 'Container');
 INSERT INTO locations (name, type) VALUES ('Generic Storage', 'Container'); -- A place for items not actively carried
 
 -- Sample Gear (for testing, can be expanded or put in a separate seed file)
-INSERT INTO gear (name, description, weight, cost, value, legality, location_id) VALUES 
-('Steel Helmet', 'A sturdy helmet for combat', 2.0, 50.0, 45.0, 'Legal', (SELECT id from locations WHERE name = 'Head')),
-('Leather Jerkin', 'Basic torso protection', 3.0, 20.0, 15.0, 'Legal', (SELECT id from locations WHERE name = 'Torso')),
-('Dagger', 'A simple sidearm', 0.5, 5.0, 4.0, 'Legal', (SELECT id from locations WHERE name = 'Belt Pouch')),
-('Rope (50ft)', 'Useful for climbing and other tasks', 5.0, 1.0, 1.0, 'Legal', (SELECT id from locations WHERE name = 'Backpack')),
-('Rations (3 days)', 'Travel sustenance', 3.0, 1.5, 1.0, 'Legal', (SELECT id from locations WHERE name = 'Backpack'));
+INSERT INTO gear (name, description, weight, cost, value, legality, category, location_id) VALUES
+('Steel Helmet', 'A sturdy helmet for combat', 2.0, 50.0, 45.0, 'Legal', 'Armor', (SELECT id from locations WHERE name = 'Head')),
+('Leather Jerkin', 'Basic torso protection', 3.0, 20.0, 15.0, 'Legal', 'Armor', (SELECT id from locations WHERE name = 'Torso')),
+('Dagger', 'A simple sidearm', 0.5, 5.0, 4.0, 'Legal', 'Weapon', (SELECT id from locations WHERE name = 'Belt Pouch')),
+('Rope (50ft)', 'Useful for climbing and other tasks', 5.0, 1.0, 1.0, 'Legal', 'Adventuring Gear', (SELECT id from locations WHERE name = 'Backpack')),
+('Rations (3 days)', 'Travel sustenance', 3.0, 1.5, 1.0, 'Legal', 'Adventuring Gear', (SELECT id from locations WHERE name = 'Backpack')),
+-- Thematic Gear Additions
+('Neural Interface Jack', 'Basic cranial data port for direct neural machine interface. Allows connection to compliant devices.', 0.1, 1200.0, 900.0, 'Restricted', 'Cyberware', (SELECT id from locations WHERE name = 'Generic Storage')),
+('"Ghost" Infiltration Suit', 'Lightweight nano-weave suit with chameleonic properties, offering minor stealth benefits.', 1.5, 3500.0, 2800.0, 'Illegal', 'Tech Armor', (SELECT id from locations WHERE name = 'Generic Storage')),
+('Mana-Tech Focus Wand', 'A wand that interweaves arcane energies with micro-circuitry to stabilize and slightly amplify simple offensive spells. Requires attunement.', 0.5, 800.0, 650.0, 'Legal', 'Magical Gadget', (SELECT id from locations WHERE name = 'Generic Storage')),
+('"Street Doc" Med-Patch', 'Single-use advanced chemical patch that can stabilize critical wounds and provide temporary pain relief. Less effective than professional medical attention.', 0.05, 150.0, 100.0, 'Legal', 'Tech Gear', (SELECT id from locations WHERE name = 'Generic Storage')),
+('Data Scrambler Optics', 'Retinal implants that project a subtle disruptive pattern, making facial recognition harder. Causes slight eye strain.', 0.02, 2000.0, 1500.0, 'Restricted', 'Cyberware', (SELECT id from locations WHERE name = 'Generic Storage')),
+('"Brightburn" Chemical Rounds (10 pack)', 'Specialized ammunition for projectile weapons, containing a payload that ignites with an intense, disorienting flare on impact.', 0.2, 300.0, 200.0, 'Illegal', 'Ammunition', (SELECT id from locations WHERE name = 'Generic Storage')),
+('Urban Survival Multi-tool', 'A ruggedized tool incorporating various technological and mundane implements useful for navigating and surviving in a dense, often hostile, urban environment. Includes a signal jammer detector.', 0.8, 450.0, 300.0, 'Legal', 'Tech Gear', (SELECT id from locations WHERE name = 'Generic Storage'));
