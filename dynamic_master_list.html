@@ -75,18 +75,26 @@
                     <span class="truncate font-body">Add New Item</span>
                 </button>
             </div>
+            <div class="mb-4 px-2 flex items-center gap-4">
+                <label for="categoryFilter" class="font-body text-sm font-medium">Filter by Category:</label>
+                <select id="categoryFilter" class="rounded-md border-sepia shadow-sm focus:border-[#654321] focus:ring-[#654321] bg-white p-2 text-gray-700 text-sm">
+                    <option value="">All Categories</option>
+                    <!-- Categories will be populated here -->
+                </select>
+            </div>
             <div class="px-2 py-3 @container">
                 <div class="overflow-x-auto rounded-lg border-2 border-sepia shadow-md">
                     <table class="w-full min-w-[900px] flex-1 table">
                         <thead class="font-title text-lg">
                             <tr class="bg-sepia-dark text-[#fdf5e6]">
                                 <th class="px-4 py-3 text-left w-[15%]">Name</th>
-                                <th class="px-4 py-3 text-left w-[25%]">Description</th>
+                                <th class="px-4 py-3 text-left w-[20%]">Description</th>
                                 <th class="px-4 py-3 text-left w-[10%] text-center">Weight</th>
                                 <th class="px-4 py-3 text-left w-[10%] text-center">Cost</th>
                                 <th class="px-4 py-3 text-left w-[10%] text-center">Value</th>
                                 <th class="px-4 py-3 text-left w-[10%] text-center">Legality</th>
-                                <th class="px-4 py-3 text-left w-[20%]">Location</th>
+                                <th class="px-4 py-3 text-left w-[10%]">Category</th>
+                                <th class="px-4 py-3 text-left w-[15%]">Location</th>
                                 <th class="px-4 py-3 text-left w-[10%] text-center">Actions</th>
                             </tr>
                         </thead>
@@ -96,9 +104,9 @@
                     </table>
                 </div>
                 <style> /* Responsive table styles from original file */
-                    @container (max-width: 1024px) { .table th:nth-child(2), .table td:nth-child(2) { display: none; } }
-                    @container (max-width: 768px) { .table th:nth-child(3), .table td:nth-child(3), .table th:nth-child(4), .table td:nth-child(4), .table th:nth-child(5), .table td:nth-child(5) { display: none; } }
-                    @container (max-width: 640px) { .table th:nth-child(7), .table td:nth-child(7) { display: none; } .table th:nth-child(1), .table td:nth-child(1) { width: 60%; } .table th:nth-child(6), .table td:nth-child(6) { width: 20%; } }
+                    @container (max-width: 1024px) { .table th:nth-child(2), .table td:nth-child(2) { display: none; } } /* Hide Description */
+                    @container (max-width: 768px) { .table th:nth-child(3), .table td:nth-child(3), .table th:nth-child(4), .table td:nth-child(4), .table th:nth-child(5), .table td:nth-child(5), .table th:nth-child(7), .table td:nth-child(7) { display: none; } } /* Hide Weight, Cost, Value, Category for medium */
+                    @container (max-width: 640px) { .table th:nth-child(8), .table td:nth-child(8) { display: none; } .table th:nth-child(1), .table td:nth-child(1) { width: 60%; } .table th:nth-child(6), .table td:nth-child(6) { width: 20%; } } /* Hide Location for small, adjust Name/Legality widths */
                 </style>
             </div>
 
@@ -134,6 +142,10 @@
                                 <input type="text" id="itemLegality" name="legality" class="w-full rounded-md border-sepia shadow-sm focus:border-[#654321] focus:ring-[#654321] bg-white p-2 text-gray-700">
                             </div>
                             <div>
+                                <label for="itemCategory" class="block text-sm font-medium mb-1">Category</label>
+                                <input type="text" id="itemCategory" name="category" class="w-full rounded-md border-sepia shadow-sm focus:border-[#654321] focus:ring-[#654321] bg-white p-2 text-gray-700">
+                            </div>
+                            <div class="md:col-span-2"> {/* Making Location span 2 cols if Category takes a slot */}
                                 <label for="itemLocation" class="block text-sm font-medium mb-1">Location</label>
                                 <select id="itemLocation" name="location_id" class="w-full rounded-md border-sepia shadow-sm focus:border-[#654321] focus:ring-[#654321] bg-white p-2 text-gray-700">
                                     <option value="">None</option>
@@ -165,7 +177,9 @@
             const itemForm = document.getElementById('itemForm');
             const cancelModalButton = document.getElementById('cancelModalButton');
             const locationSelect = document.getElementById('itemLocation');
+            const categoryFilterSelect = document.getElementById('categoryFilter'); // Added
             let editingItemId = null;
+            let allGearItems = []; // Added for filtering
 
             async function loadLocations() {
                 try {
@@ -185,15 +199,22 @@
                 }
             }
 
-            async function fetchAndDisplayGear() {
+            async function fetchAndDisplayGear(filterCategory = null) { // Modified to accept filter
                 try {
-                    const response = await fetch('/api/gear');
-                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                    const gearItems = await response.json();
+                    // Fetch only if allGearItems is empty to avoid refetching on every filter change.
+                    // On item add/edit/delete, allGearItems will be cleared to force a fresh fetch.
+                    if (allGearItems.length === 0) {
+                        const response = await fetch('/api/gear');
+                        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                        allGearItems = await response.json();
+                        populateCategoryFilter(allGearItems); // Populate filter on first load or data refresh
+                    }
                     
                     itemTableBody.innerHTML = ''; 
 
-                    gearItems.forEach(item => {
+                    const itemsToDisplay = filterCategory ? allGearItems.filter(item => item.category === filterCategory) : allGearItems;
+
+                    itemsToDisplay.forEach(item => {
                         const row = itemTableBody.insertRow();
                         row.className = 'border-t border-sepia bg-opacity-50 hover:bg-sepia-dark hover:bg-opacity-20 transition-colors duration-100';
                         
@@ -227,6 +248,7 @@
                             legalityCell.textContent = 'N/A';
                         }
 
+                        row.insertCell().textContent = item.category || 'N/A'; // Display category
                         row.insertCell().textContent = item.location ? `${item.location.name}` : 'None';
                         
                         const actionsCell = row.insertCell();
@@ -246,9 +268,41 @@
                     });
                 } catch (error) {
                     console.error('Failed to fetch gear:', error);
-                    itemTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4">Failed to load gear. Check console.</td></tr>';
+                    itemTableBody.innerHTML = '<tr><td colspan="9" class="text-center py-4">Failed to load gear. Check console.</td></tr>'; // Colspan updated to 9
                 }
             }
+
+            function populateCategoryFilter(gearItems) {
+                const categories = new Set();
+                gearItems.forEach(item => {
+                    if (item.category) { // Only add if category is present and not null/empty
+                        categories.add(item.category);
+                    }
+                });
+
+                const currentFilterValue = categoryFilterSelect.value; // Preserve selection if possible
+                categoryFilterSelect.innerHTML = '<option value="">All Categories</option>'; // Reset
+
+                const sortedCategories = Array.from(categories).sort(); // Sort categories alphabetically
+
+                sortedCategories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categoryFilterSelect.appendChild(option);
+                });
+
+                // Try to restore previous selection, otherwise default to "All Categories"
+                if (Array.from(categoryFilterSelect.options).some(opt => opt.value === currentFilterValue)) {
+                    categoryFilterSelect.value = currentFilterValue;
+                } else {
+                    categoryFilterSelect.value = ""; // Default to "All" if previous selection is no longer valid
+                }
+            }
+
+            categoryFilterSelect.addEventListener('change', function() {
+                fetchAndDisplayGear(this.value); // Pass selected category value, or "" for all
+            });
 
             function showModal(isEdit = false, item = null) {
                 editingItemId = isEdit && item ? item.id : null;
@@ -264,6 +318,7 @@
                     document.getElementById('itemCost').value = item.cost !== null ? item.cost : '';
                     document.getElementById('itemValue').value = item.value !== null ? item.value : '';
                     document.getElementById('itemLegality').value = item.legality || '';
+                    document.getElementById('itemCategory').value = item.category || ''; // Added category
                     locationSelect.value = item.location_id || '';
                 }
                 itemModal.classList.remove('hidden');
@@ -293,15 +348,19 @@
                 data.cost = data.cost ? parseFloat(data.cost) : null;
                 data.value = data.value ? parseFloat(data.value) : null;
                 data.location_id = data.location_id ? parseInt(data.location_id) : null;
+                data.category = formData.get('category'); // Get category, send empty string if blank.
                 
                 // Clean up optional fields that are empty strings
-                for (const key of ['description', 'legality', 'cost', 'value', 'location_id']) {
-                    if (data[key] === '' || (key === 'location_id' && data[key] === null) ) {
-                        if (key === 'location_id') data[key] = null; // Ensure location_id is null not ""
-                        else if (key === 'cost' || key === 'value') data[key] = null; // Ensure cost/value are null
-                        // For description and legality, empty string is acceptable, so no 'delete data[key]'
+                // For description, legality, category, empty string is acceptable as per Pydantic model (Optional[str])
+                // For cost, value, location_id, they should be null if not provided or empty.
+                for (const key of ['cost', 'value', 'location_id']) {
+                    if (data[key] === '') { // This will also catch if parseInt/parseFloat resulted in NaN then toString is ""? No, they'd be null.
+                       data[key] = null;
                     }
                 }
+                // For category, Pydantic Optional[str] means "" is a valid string.
+                // If category must be null when empty, it would be: if (data.category === "") data.category = null;
+
                 if (data.name === "") delete data.name; // Should be caught by "required" but defensive
                 if (isNaN(data.weight)) delete data.weight; // Same for weight
 
@@ -322,8 +381,10 @@
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     
+
+                    allGearItems = []; // Force refresh of allGearItems and categories
                     hideModal();
-                    fetchAndDisplayGear(); 
+                    fetchAndDisplayGear(categoryFilterSelect.value); // Refresh with current filter
                 } catch (error) {
                     console.error('Error submitting form:', error);
                 }
@@ -355,7 +416,8 @@
                                 alert(`Error deleting item: ${errorData.error || 'Unknown error'}`);
                                 throw new Error('Failed to delete item.');
                             }
-                            fetchAndDisplayGear(); 
+                            allGearItems = []; // Force refresh of allGearItems and categories
+                            fetchAndDisplayGear(categoryFilterSelect.value); // Refresh with current filter
                         } catch (error) {
                             console.error('Error deleting item:', error);
                         }
@@ -363,7 +425,7 @@
                 }
             });
 
-            fetchAndDisplayGear(); // Initial load
+            fetchAndDisplayGear(); // Initial load, will populate allGearItems and category filter
         });
     </script>
     </body>
