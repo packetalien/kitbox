@@ -1,0 +1,81 @@
+name: CI/CD Pipeline for KitBox App
+
+on:
+  push:
+    branches:
+      - main # Or your primary branch
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10' # Or the version you intend to use
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 # For linting
+
+      - name: Lint with Flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  deploy:
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' # Only deploy from main branch
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Note: The deploy.sh script is designed for initial server setup.
+      # For CI/CD updates, we typically run a more lightweight set of commands.
+      # This example assumes deploy.sh has already been run once on the server.
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SERVER_PORT || 22 }} # Default to 22 if not specified
+          script: |
+            set -e # Exit on error
+            APP_DIR="/var/www/kitbox" # Should match deploy.sh
+            VENV_DIR="${APP_DIR}/venv"
+
+            echo "Navigating to application directory ${APP_DIR}..."
+            cd ${APP_DIR}
+
+            echo "Pulling latest changes from Git..."
+            git pull origin main # Assumes 'origin main' is the correct remote/branch
+
+            echo "Activating virtual environment and installing/updating dependencies..."
+            source ${VENV_DIR}/bin/activate
+            pip install --upgrade pip
+            pip install -r requirements.txt
+            pip install gunicorn # Ensure gunicorn is there
+
+            # Optional: Run database migrations if you have them
+            # flask db migrate
+            # flask db upgrade
+            
+            # The app's init_db runs on startup if db doesn't exist.
+            # If schema changes, a migration strategy or explicit re-init might be needed.
+            # For now, we assume schema is stable or handled by app.
+            # Example: flask init-db (if safe to re-run or idempotent)
+
+            echo "Restarting Gunicorn service..."
+            sudo systemctl restart kitbox.service
+
+            echo "Deployment successful."

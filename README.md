@@ -52,11 +52,10 @@ This version is implemented with a Python Flask backend and an HTML/JavaScript f
         ```
 
 3.  **Install Dependencies:**
-    You will need Flask and Pydantic. You can install them using pip:
+    This project uses a `requirements.txt` file to manage dependencies. Install them using pip:
     ```bash
-    pip install Flask Pydantic
+    pip install -r requirements.txt
     ```
-    (Ideally, this project would have a `requirements.txt` file. You can create one after installing dependencies with `pip freeze > requirements.txt`)
 
 4.  **Initialize the Database:**
     The application uses SQLite. The database schema and initial data are defined in `src/database/schema.sql`. To initialize (or re-initialize) the database, run the following Flask CLI command from the project root:
@@ -97,3 +96,87 @@ These endpoints return JSON data and are used by the JavaScript in the HTML page
 *   The HTML pages use Tailwind CSS for styling and include custom styles for the parchment theme.
 *   JavaScript is embedded in the HTML files to handle API interactions and DOM manipulation.
 *   The application is designed to be run locally.
+
+## Deployment
+
+This section describes how to deploy the KitBox application to a server.
+
+### Manual Deployment (Initial Server Setup)
+
+A `deploy.sh` script is provided to automate the initial setup of the KitBox application on a fresh Ubuntu 24.04 server. This script will:
+
+1.  Update system packages.
+2.  Install Nginx, Python 3, pip, and virtual environment tools.
+3.  Create a dedicated application user (`kitboxapp`).
+4.  Set up the application directory (`/var/www/kitbox`).
+5.  Create a Python virtual environment.
+6.  Install Python dependencies (Flask, Pydantic, Gunicorn).
+7.  Configure and start a Gunicorn systemd service to run the Flask application.
+8.  Configure Nginx as a reverse proxy to Gunicorn.
+9.  Optionally, configure UFW (Uncomplicated Firewall) to allow HTTP/HTTPS traffic.
+
+**Steps to use `deploy.sh`:**
+
+1.  **Transfer Script and Application Files:**
+    *   Copy the `deploy.sh` script to your Ubuntu server.
+    *   Copy your entire KitBox application project (or clone it from your Git repository) to a temporary location on the server (e.g., `/tmp/kitbox_source`). The `deploy.sh` script currently assumes it's run from the project root and copies files from there. You might need to adjust paths in the script or ensure it's run from the correct directory containing all project files (`app.py`, `requirements.txt`, HTML files, `src/` directory, etc.).
+
+2.  **Make `deploy.sh` Executable:**
+    ```bash
+    chmod +x deploy.sh
+    ```
+
+3.  **Run the Script:**
+    Execute the script with `sudo` (as it performs system-level installations and configurations):
+    ```bash
+    sudo ./deploy.sh
+    ```
+    The script will prompt for any necessary password confirmations for `sudo` operations.
+
+4.  **Post-Deployment:**
+    *   After the script completes, your application should be accessible via the server's IP address or domain name (if configured).
+    *   The Gunicorn service (`kitbox.service`) will manage the application process and ensure it runs on boot.
+    *   Nginx will serve as the front-end web server, proxying requests to Gunicorn.
+
+**Important Notes for `deploy.sh`:**
+*   Review the variables at the top of `deploy.sh` (like `APP_USER`, `APP_DIR`) and adjust if necessary before running.
+*   The script is designed for an initial setup. If you re-run it, some steps are idempotent (safe to run multiple times), but others (like user creation) might output warnings if the resource already exists.
+*   The script attempts to copy application files from the directory where it is executed. Ensure all necessary project files (`app.py`, `requirements.txt`, HTML files, `src/` etc.) are present in that location relative to the script.
+*   The database `kitbox.db` will be created in the application directory (`/var/www/kitbox`) and initialized by the Flask application on its first run.
+
+### CI/CD with GitHub Actions
+
+This project includes a GitHub Actions workflow defined in `.github/workflows/main.yml` to automate the continuous integration and deployment process.
+
+**Pipeline Overview:**
+
+1.  **Trigger:** The workflow automatically triggers on every push to the `main` branch.
+2.  **Lint & Test (`lint-and-test` job):**
+    *   Checks out the latest code.
+    *   Sets up the specified Python environment.
+    *   Installs project dependencies from `requirements.txt`.
+    *   Runs Flake8 to lint the Python codebase. (Actual tests can be added to this job in the future).
+3.  **Deploy (`deploy` job):**
+    *   This job runs only if the `lint-and-test` job is successful and the push is to the `main` branch.
+    *   It securely connects to the deployment server using SSH.
+    *   On the server, it performs the following actions:
+        *   Navigates to the application directory (e.g., `/var/www/kitbox`).
+        *   Pulls the latest changes from the `main` branch of your Git repository.
+        *   Activates the Python virtual environment.
+        *   Installs or updates dependencies from `requirements.txt`.
+        *   Restarts the Gunicorn systemd service (`kitbox.service`) to apply changes.
+
+**Setup for CI/CD Deployment:**
+
+To enable the automated deployment part of the CI/CD pipeline, you need to configure the following secrets in your GitHub repository settings (under `Settings` > `Secrets and variables` > `Actions`):
+
+*   `SERVER_HOST`: The hostname or IP address of your deployment server.
+*   `SERVER_USERNAME`: The username to use for SSH login to the server (this user should have `sudo` privileges to restart services, or the Gunicorn service restart command should be runnable without `sudo` for this user).
+*   `SSH_PRIVATE_KEY`: The private SSH key that corresponds to an authorized public key on your server for the `SERVER_USERNAME`.
+*   `SERVER_PORT` (Optional): The SSH port on your server if it's not the default port 22.
+
+**Workflow Details:**
+
+*   The `deploy.sh` script is intended for the *initial provisioning* of the server. The CI/CD pipeline handles *updates* to an already provisioned server.
+*   Ensure the application user on the server (e.g., `kitboxapp`) has the necessary permissions to pull from the Git repository if you are deploying from a private repository (e.g., by setting up deploy keys).
+*   The workflow uses `appleboy/ssh-action` to interact with the remote server.
