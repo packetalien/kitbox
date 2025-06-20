@@ -2,6 +2,12 @@
 
 PRAGMA foreign_keys = ON; -- Enforce foreign key constraints
 
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS locations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE, -- Assuming location names like "Head" or "Backpack" are unique
@@ -41,7 +47,7 @@ INSERT INTO locations (name, type) VALUES ('Waist', 'Body Slot');
 INSERT INTO locations (name, type) VALUES ('Legs', 'Body Slot');
 INSERT INTO locations (name, type) VALUES ('Foot L', 'Body Slot');
 INSERT INTO locations (name, type) VALUES ('Foot R', 'Body Slot');
-INSERT INTO locations (name,type) VALUES ('Feet', 'Body Slot');
+INSERT INTO locations (name, type) VALUES ('Feet', 'Body Slot');
 
 -- Common Containers (these are also locations items can be in)
 INSERT INTO locations (name, type) VALUES ('Backpack', 'Container');

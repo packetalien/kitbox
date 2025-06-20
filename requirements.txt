@@ -1,0 +1,7 @@
+Flask
+pydantic
+Flask-JWT-Extended
+Werkzeug
+gunicorn
+python-dotenv
+pytest # For running tests, though not strictly a runtime dependency for the app itself
