@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# IDE / Editor specific
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Tests (unless you have a multi-stage build that runs tests)
+tests/
+
+# Databases & Instance Data
+*.db
+*.sqlite3
+test_kitbox.db*
+instance/ # Exclude the whole instance folder which might contain test DBs or other local dev files
+# If instance/ contains other necessary files for prod, adjust this line or add specific ignores
+
+# Flask specific temp files
+.flaskenv
+
+# Logs
+*.log
+logs/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Coverage
+.coverage
+coverage.xml
+htmlcov/
+
+# Pytest cache
+.pytest_cache/
