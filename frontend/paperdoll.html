@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KitBox - Paperdoll</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?display=swap&family=MedievalSharp&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .paperdoll-container-bg {
+            position: relative;
+            width: 300px; /* Adjust as needed */
+            height: 450px; /* Adjust as needed */
+            margin: 0 auto;
+            background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDIb80yIupPvXMfxDuLL53n33km_SosPmcorbB-CDuT0lxaMTD0pZVYs3y5mTwl_BDBC9B7XM6Gp_FZQOtF6lLAhtI1KxoaTijpNoMSu-ciJcXzhrI18uDfsVbDx1VsX5wVL3mwq8roBbFv_U9PPCotjmZ5NA7ytt2FlW_uB-ENRCKDIe1VQHJrm1XBd6eTIeJHWyEhLvdMFoJVBZDMcN_U0jnG_jMGVYiCzagtCFYfPfc-CppDnsylkU6PDWMckzC7WMnYeePX2KA"); /* Placeholder image */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            border: 1px solid #8B4513; /* Sepia border */
+        }
+        .equipment-slot {
+            position: absolute;
+            width: 50px; height: 50px;
+            border: 1px dashed #8B4513; /* Sepia dashed border */
+            background-color: rgba(245, 222, 179, 0.3); /* Light parchment with alpha */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: #654321; /* Darker sepia text */
+            cursor: pointer;
+            transition: background-color 0.3s;
+            overflow: hidden;
+            text-align: center;
+            padding: 2px;
+        }
+        .equipment-slot:hover {
+            background-color: rgba(210, 180, 140, 0.5); /* Darker parchment on hover */
+        }
+        /* Define positions for each slot based on the background image */
+        .slot-Head { top: 10px; left: 125px; }
+        .slot-Neck { top: 70px; left: 125px; }
+        .slot-Shoulders { top: 65px; left: 125px; transform: translateX(-50%); width:120px; text-align:center} /* Example generic, specific L/R below */
+        .slot-Shoulder_L { top: 70px; left: 55px; } /* Specific example */
+        .slot-Shoulder_R { top: 70px; left: 195px; }/* Specific example */
+        .slot-Arms {top: 125px; left: 125px; transform: translateX(-50%); width:180px; text-align:center} /* Example generic */
+        .slot-Arms_L { top: 130px; left: 30px; }   /* Specific example */
+        .slot-Arms_R { top: 130px; left: 220px; }  /* Specific example */
+        .slot-Hands {top: 185px; left: 125px; transform: translateX(-50%); width:220px; text-align:center} /* Example generic */
+        .slot-Hand_L { top: 190px; left: 10px; }    /* Specific example */
+        .slot-Hand_R { top: 190px; left: 240px; }   /* Specific example */
+        .slot-Torso { top: 130px; left: 125px; width: 50px; height: 100px;}
+        .slot-Waist { top: 240px; left: 125px; }
+        .slot-Legs { top: 300px; left: 125px; }
+        .slot-Feet {top: 375px; left: 125px; transform: translateX(-50%); width:150px; text-align:center} /* Example generic */
+        .slot-Foot_L { top: 380px; left: 85px; }    /* Specific example */
+        .slot-Foot_R { top: 380px; left: 165px; }   /* Specific example */
+
+        .container-list-item {
+            background-color: rgba(245, 230, 205, 0.5); /* Light sepia tone */
+            border: 1px solid #b9946a; /* Muted sepia border */
+        }
+    </style>
+</head>
+<body class="parchment-bg font-body text-sepia">
+    <div class="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden">
+        <header class="flex items-center justify-between whitespace-nowrap border-b-4 border-sepia px-10 py-4 shadow-lg bg-sepia-light">
+            <div class="flex items-center gap-4">
+                <h1 class="font-title text-3xl text-[#654321] tracking-wider">KitBox - Paperdoll</h1>
+            </div>
+            <nav class="flex flex-1 justify-end gap-6">
+                <a class="text-sepia text-base font-medium leading-normal hover-sepia font-body" href="master_list.html">Equipment List</a>
+                <button id="logoutButtonPaperdoll" class="btn-secondary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold">
+                    <span class="material-icons text-lg">logout</span> Logout
+                </button>
+            </nav>
+        </header>
+
+        <main class="px-10 md:px-15 lg:px-20 flex flex-1 justify-center py-8">
+            <div class="layout-content-container flex flex-col lg:flex-row gap-8 w-full max-w-6xl parchment-border bg-sepia-light p-6 shadow-xl">
+
+                <!-- Paperdoll Column -->
+                <div class="lg:w-1/3 flex flex-col items-center">
+                    <h2 class="font-title text-2xl text-sepia mb-4">Character Model</h2>
+                    <div id="paperdollContainer" class="paperdoll-container-bg">
+                        <!-- Equipment slots will be dynamically added here or pre-defined if static -->
+                    </div>
+                </div>
+
+                <!-- Equipment and Containers Column -->
+                <div class="lg:w-2/3">
+                    <div id="errorMessagePaperdoll" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded hidden"></div>
+
+                    <h2 class="font-title text-2xl text-sepia mb-4">Equipped Items</h2>
+                    <div id="equippedItemsList" class="space-y-2 mb-6">
+                        <!-- Equipped items will be listed here -->
+                        <p>Loading equipped items...</p>
+                    </div>
+
+                    <h2 class="font-title text-2xl text-sepia mb-4">Containers</h2>
+                    <div id="containersList" class="space-y-2">
+                        <!-- Containers will be listed here -->
+                        <p>Loading containers...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center py-4 mt-auto bg-sepia-light border-t-2 border-sepia">
+            <p class="text-xs text-sepia font-body">© 2024 KitBox. All rights reserved.</p>
+        </footer>
+    </div>
+    <script type="module" src="js/paperdoll.js"></script>
+</body>
+</html>
