@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KitBox - Login</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?display=swap&family=MedievalSharp&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body class="parchment-bg text-sepia min-h-screen flex flex-col items-center justify-center">
+
+    <div id="authContainer" class="parchment-border bg-sepia-light p-8 rounded-lg shadow-xl w-full max-w-md">
+        <h1 class="font-title text-4xl text-center mb-6 text-sepia">KitBox</h1>
+
+        <!-- Error Message Display -->
+        <div id="errorMessage" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded hidden"></div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="space-y-4">
+            <h2 class="font-title text-2xl text-center mb-4">Login</h2>
+            <div>
+                <label for="loginUsername" class="block text-sm font-medium">Username</label>
+                <input type="text" id="loginUsername" name="username" required
+                       class="mt-1 block w-full px-3 py-2 border border-sepia rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm bg-white text-gray-900">
+            </div>
+            <div>
+                <label for="loginPassword" class="block text-sm font-medium">Password</label>
+                <input type="password" id="loginPassword" name="password" required
+                       class="mt-1 block w-full px-3 py-2 border border-sepia rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm bg-white text-gray-900">
+            </div>
+            <button type="submit" class="w-full btn-primary py-2 px-4 rounded-md font-semibold">Login</button>
+            <p class="text-center text-sm">
+                Don't have an account? <a href="#" id="showRegister" class="hover-sepia font-semibold">Register here</a>
+            </p>
+        </form>
+
+        <!-- Registration Form (Hidden by default) -->
+        <form id="registerForm" class="space-y-4 hidden">
+            <h2 class="font-title text-2xl text-center mb-4">Register</h2>
+            <div>
+                <label for="registerUsername" class="block text-sm font-medium">Username</label>
+                <input type="text" id="registerUsername" name="username" required minlength="3"
+                       class="mt-1 block w-full px-3 py-2 border border-sepia rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm bg-white text-gray-900">
+            </div>
+            <div>
+                <label for="registerPassword" class="block text-sm font-medium">Password</label>
+                <input type="password" id="registerPassword" name="password" required minlength="8"
+                       class="mt-1 block w-full px-3 py-2 border border-sepia rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm bg-white text-gray-900">
+            </div>
+            <div>
+                <label for="registerConfirmPassword" class="block text-sm font-medium">Confirm Password</label>
+                <input type="password" id="registerConfirmPassword" name="confirmPassword" required
+                       class="mt-1 block w-full px-3 py-2 border border-sepia rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm bg-white text-gray-900">
+            </div>
+            <button type="submit" class="w-full btn-primary py-2 px-4 rounded-md font-semibold">Register</button>
+            <p class="text-center text-sm">
+                Already have an account? <a href="#" id="showLogin" class="hover-sepia font-semibold">Login here</a>
+            </p>
+        </form>
+    </div>
+
+    <script type="module" src="js/auth.js"></script>
+</body>
+</html>

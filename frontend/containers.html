@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KitBox - Container Contents</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?display=swap&family=MedievalSharp&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body class="parchment-bg font-body text-sepia">
+    <div class="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden">
+        <header class="flex items-center justify-between whitespace-nowrap border-b-4 border-sepia px-10 py-4 shadow-lg bg-sepia-light">
+            <div class="flex items-center gap-4">
+                <h1 id="containerPageTitle" class="font-title text-3xl text-[#654321] tracking-wider">KitBox - Container</h1>
+            </div>
+            <nav class="flex flex-1 justify-end gap-6">
+                <a class="text-sepia text-base font-medium leading-normal hover-sepia font-body" href="master_list.html">Equipment List</a>
+                <a class="text-sepia text-base font-medium leading-normal hover-sepia font-body" href="paperdoll.html">Paperdoll</a>
+                <button id="logoutButtonContainer" class="btn-secondary flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold">
+                    <span class="material-icons text-lg">logout</span> Logout
+                </button>
+            </nav>
+        </header>
+
+        <main class="px-10 md:px-20 lg:px-40 flex flex-1 justify-center py-8">
+            <div class="layout-content-container flex flex-col max-w-4xl w-full flex-1 parchment-border bg-sepia-light p-6 shadow-xl">
+                <div class="flex flex-wrap justify-between items-center gap-4 p-4 border-b-2 border-sepia mb-6">
+                    <h2 id="containerNameTitle" class="text-sepia tracking-wide text-4xl font-title">Container Contents</h2>
+                    <button id="addItemToContainerButton" class="btn-primary flex items-center gap-2 px-4 py-2 rounded-md text-sm font-bold">
+                        <span class="material-icons text-lg">add_circle_outline</span> Add Item to Container
+                    </button>
+                </div>
+
+                <div id="errorMessageContainer" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded hidden"></div>
+
+                <div class="px-2 py-3 @container">
+                    <div class="overflow-x-auto rounded-lg border-2 border-sepia shadow-md">
+                        <table class="w-full min-w-[700px] flex-1 table">
+                            <thead class="font-title text-lg">
+                                <tr class="bg-sepia-dark text-[#fdf5e6]">
+                                    <th class="px-4 py-3 text-left w-[40%]">Item Name</th>
+                                    <th class="px-4 py-3 text-left w-[15%] text-center">Weight</th>
+                                    <th class="px-4 py-3 text-left w-[15%] text-center">Value</th>
+                                    <th class="px-4 py-3 text-left w-[15%]">Category</th>
+                                    <th class="px-4 py-3 text-left w-[15%] text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="containerItemsTableBody" class="font-body text-sm">
+                                <!-- Items will be populated here -->
+                                <tr><td colspan="5" class="text-center p-4">Loading items...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="mt-6 p-4 border-t border-sepia flex justify-between items-center">
+                    <div>
+                        <p class="text-sm text-sepia"><strong class="font-title">Total Weight:</strong> <span id="totalWeight">0</span> lbs</p>
+                        <p class="text-sm text-sepia"><strong class="font-title">Total Value:</strong> <span id="totalValue">0</span></p>
+                    </div>
+                    <a href="paperdoll.html" class="btn-secondary medieval-font text-md font-semibold px-4 py-2 rounded-md border-2 hover:shadow-lg transition-shadow flex items-center gap-2">
+                        <span class="material-icons">arrow_back</span> Back to Paperdoll
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center py-4 mt-auto bg-sepia-light border-t-2 border-sepia">
+            <p class="text-xs text-sepia font-body">© 2024 KitBox. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Add Item to Container Modal -->
+    <div id="addItemModal" class="modal">
+        <div class="modal-content parchment-bg parchment-border text-sepia">
+            <span class="close-button" id="closeAddItemModalButton">&times;</span>
+            <h3 class="font-title text-2xl mb-4">Add Item to <span id="modalContainerName">Container</span></h3>
+            <div id="addItemModalErrorMessage" class="mb-3 p-2 bg-red-100 border border-red-300 text-red-600 rounded hidden"></div>
+            <div>
+                <label for="itemSearchInput" class="block text-sm font-medium mb-1">Search for item to add:</label>
+                <input type="text" id="itemSearchInput" placeholder="Type to search..." class="w-full px-3 py-2 border border-sepia rounded-md shadow-sm bg-white text-gray-900 mb-2">
+                <div id="itemListContainer" class="max-h-60 overflow-y-auto border border-sepia p-2 bg-white rounded">
+                    <!-- Search results will appear here -->
+                    <p class="text-gray-500">Start typing to see available items.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/containers.js"></script>
+</body>
+</html>
